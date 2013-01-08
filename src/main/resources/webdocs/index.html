@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>vert.x console</title>
+  <link rel="stylesheet" href="styles/foundation.min.css">
+  <link rel="stylesheet" href="styles/demo.css">
+  <script src="http://cdn.sockjs.org/sockjs-0.2.1.min.js"></script>
+  <script src="scripts/vertxbus.js"></script>
+  <script src="scripts/modernizr.foundation.js"></script>
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+
+  <div class="row">
+    <div class="twelve columns">
+      <h1 id="address" class="center">0.0.0.0</h1>
+      <h2 id="receiver" class="center">Loading...</h2>
+      <h1 id="counter" class="center">0 requests</h1>
+    </div>
+  </div>
+
+  <script src="scripts/jquery.js"></script>
+  <script src="scripts/foundation.min.js"></script>
+  <script src="scripts/setup.js"></script>
+
+  <script>
+  var eb = new vertx.EventBus("/eventbus");
+
+  eb.onopen = function() {
+    eb.registerHandler('vertx.demo', function(msg) {
+      $('#receiver').html(msg.currentTime)
+    })
+    eb.registerHandler('vertx.count.announcer', function(msg) {
+      $('#address').html(msg.address)
+      $('#counter').html(msg.counter + " requests")
+    })
+    eb.send('vertx.count.receiver', {'count': 1})
+  };
+
+  eb.onclose = function() {
+    console.log("Not connected");
+    eb = null;
+  };
+
+  </script>
+
+</body>
+</html>
