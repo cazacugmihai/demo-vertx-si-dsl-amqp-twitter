@@ -8,7 +8,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
-  <title>vert.x console</title>
+  <title>vert.x tweet slurper</title>
   <link rel="stylesheet" href="styles/foundation.min.css">
   <link rel="stylesheet" href="styles/demo.css">
   <script src="http://cdn.sockjs.org/sockjs-0.2.1.min.js"></script>
@@ -22,9 +22,8 @@
 
   <div class="row">
     <div class="twelve columns">
-      <h1 id="address" class="center">0.0.0.0</h1>
+      <h1 id="query" class="center">#cheese</h1>
       <h2 id="receiver" class="center">Loading...</h2>
-      <h1 id="counter" class="center">0 requests</h1>
     </div>
   </div>
 
@@ -36,14 +35,11 @@
   var eb = new vertx.EventBus("/eventbus");
 
   eb.onopen = function() {
-    eb.registerHandler('vertx.demo', function(msg) {
-      $('#receiver').html(msg.currentTime)
+	  $('#receiver').html('')
+    eb.registerHandler('vertx.tweets', function(json) {
+      $('#receiver').prepend('<p>' + json.tweet + '</p>')
     })
-    eb.registerHandler('vertx.count.announcer', function(msg) {
-      $('#address').html(msg.address)
-      $('#counter').html(msg.counter + " requests")
-    })
-    eb.send('vertx.count.receiver', {'count': 1})
+    eb.send('vertx.tweet.controller', 'start')
   };
 
   eb.onclose = function() {

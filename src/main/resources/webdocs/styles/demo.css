@@ -1,6 +1,8 @@
 body {
-  margin-top: 140px;
+  margin-top: 40px;
+  background: #000;
 }
+
 .center {
   text-align: center;
 }
@@ -12,5 +14,5 @@ h1 {
 
 h2 {
   font-size: 56pt;
-  color: #09c
+  color: #ff0
 }
