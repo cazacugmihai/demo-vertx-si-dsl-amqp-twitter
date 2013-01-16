@@ -2,9 +2,7 @@
 
 buildscript {
   repositories {
-    mavenLocal()
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-    maven { url 'http://repo.springsource.org/libs-snapshot' }
     mavenCentral()
   }
   dependencies {
@@ -26,7 +24,7 @@ targetCompatibility = '1.7'
 jar.enabled = false // We don't produce a jar
 
 repositories {
-  mavenLocal()
+  mavenLocal()  // required for local install of spring-integration-dsl-groovy
   mavenCentral()
 }
 
