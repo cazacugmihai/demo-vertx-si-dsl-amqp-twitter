@@ -2,6 +2,7 @@
 
 buildscript {
   repositories {
+    mavenLocal()
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     mavenCentral()
   }
@@ -38,6 +39,7 @@ dependencies {
   provided    "org.mozilla:rhino:$rhinoVersion"
   provided    "org.codehaus.jackson:jackson-core-asl:$jacksonVersion"
   provided    "org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion"
+  provided    files('src/conf')
 
   groovy      "org.codehaus.groovy:groovy-all:$groovyVersion"
 
@@ -56,14 +58,20 @@ dependencies {
 
 vertx {
   host = 'localhost'
-  port = 50001
+  // port = 50001
 }
 
 verticle {
   main = 'App.groovy'
   urls = ['build/resources/main']
+  systemProperty 'vertx.mods', 'build/tmp/mods-test'
 }
 
 vertxModule {
-  name = "${project.modulename}-v${project.version}"
+  // loggingProperties = 'src/conf/logging.properties'
+  // langsProperties = 'src/conf/langs.properties'
+  // clusterXml = 'src/conf/cluster.xml'
+  systemProperty 'vertx.mods', file('build/tmp/mods-test').absolutePath
+  systemProperty 'java.util.logging.config.file', file('src/conf/logging.properties').absolutePath
+  // classpath = files('src/vertxInteg/resources')
 }

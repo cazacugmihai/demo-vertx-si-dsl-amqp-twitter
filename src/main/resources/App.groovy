@@ -1,14 +1,7 @@
-
 import org.springframework.integration.dsl.groovy.MessageFlow
 import org.springframework.integration.dsl.groovy.builder.IntegrationBuilder
 
-
-/*
- * Start of vert.x configuration and setup.
- */
 def eb = vertx.getEventBus()
-
-println 'user.dir' + System.getProperty('user.dir')
 
 def webappConf = [
   port: 8080,
@@ -23,16 +16,11 @@ def webappConf = [
 container.with {
   deployModule('vertx.web-server-v1.0', webappConf, 1, {
     eb.registerHandler 'vertx.tweets', { msg->
-      println "tweet: ${msg.body.tweet}"
+      println "tweet: ${msg.body.tweet}" // console logger
     }
   })
 }
 
-
-/*
- * The Spring Integration Groovy DSL
- * 
- */
 def builder = new IntegrationBuilder('amqp')
 
 builder.doWithSpringIntegration {
@@ -63,5 +51,4 @@ builder.doWithSpringIntegration {
     amqpListen queueNames:'tweets', connectionFactory:'connectionFactory', requestChannel:'amqp-tweets'
     handle { eb.publish('vertx.tweets', ['tweet':it]) }
   }
-
 }
